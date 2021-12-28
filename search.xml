@@ -1,24 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/comments/2021/12/22/hello-world/</url>
-    <content><![CDATA[<p>开摆摸几天。</p>
+    <title>短评《现代 C++ 白皮书》</title>
+    <url>/comments/2021/12/28/develope-modern-cpp/</url>
+    <content><![CDATA[<p>近几天读完了 Bjarne Stroustrup 的 HOPL4 论文 <a href="https://www.stroustrup.com/hopl20main-p5-p-bfc9cd4--final.pdf">Thriving in a Crowded and Changing World: C++ 2006–2020</a> 经由 Boolan 组织翻译的中文版，相关文本内容托管在 GitHub 上，<a href="https://github.com/cpp-club/cxx_hopl4_zh">在线阅读</a>。</p>
+<p>不谈其中具体的技术细节，我从 Bjarne 反思 C++ 作为一门编程语言在几十年来如何发展，遇到的问题以及未来的方向的考虑的过程中得到了不少启发，这里做个转述和简短的评论。</p>
 <span id="more"></span>
 
-<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="目标与原则"><a href="#目标与原则" class="headerlink" title="目标与原则"></a>目标与原则</h2><p>一门编程语言也好，一个开源项目也好，要想获得长久的生命力，无一不是面向真实的用户问题，形成自己的一套解决方法和原则，并长期坚持予以贯彻。C++ 的发展在 Bjarne 的眼中即是如此。</p>
+<p>C++ 作为一门通用编程语言，能够纳入其所要解决的问题涵盖的范围相当广泛。甚至可以说任何需求都可以是 C++ 的需求。在这样的背景下，Bjarne 还是给出了应该避免的错误关注点，指出哪些类型的需求是可疑的。对于一个雄心勃勃的新项目来说，将所有需求都纳入自己的范畴之内无疑是极具诱惑的，但是知道自己不做什么，才是让这个项目脚踏实地真正解决问题的第一步。</p>
+<p>Bjarne 总结了 C++ 发展过程当中的教训，包括了一些错误的关注点</p>
+<ul>
+<li>只为专家服务。某个功能从开始的时候就要满足所有专家的需要。</li>
+<li>模仿。我们需要这个功能，因为它在另外某个语言里很流行。</li>
+<li>理论性。语言理论里说语言一定要有这个特性。</li>
+<li>革命性。此功能非常重要，以至于我们必须打破兼容性，或者摒弃那些不好的老方法。</li>
+</ul>
+<p>这些都是非常经典的说辞，论文里却对它们全部予以驳斥。Bjarne 观察到用户对 C++ 的要求是</p>
+<ul>
+<li>让语言更简单！</li>
+<li>立即添加这两个必要特性！！</li>
+<li>不要搞砸我的（任何）代码！！！</li>
+</ul>
+<p>这三者其实是相互矛盾的，语言的简化和演进会对兼容性形成挑战，新增特性和简单性之间也会有所冲突。Bjarne 由此归纳出来的发展原则是</p>
+<ul>
+<li>问题驱动。C++ 开发应该被那些真实世界中的具体问题的需求所驱动。</li>
+<li>简单。C++ 应该从简单、高效、易用的解决方案中进行推广而成长。</li>
+<li>高效。C++ 语言和标准库应该遵循零开销原则。</li>
+<li>稳定性。不要搞砸我的代码！</li>
+</ul>
+<p>并且几乎总是站在简单性的一边。好的软件通过提供恰如其分的抽象和合理的默认行为来简化用户逻辑的表达。Bjarne 反复提及的设计理念是所谓的“洋葱原则”</p>
+<blockquote>
+<p>如果要完成的任务是简单的，那就用简单的方法做；当要完成的任务不是那么简单时，就需要更详细、更复杂的技巧或写法。这就好比你剥下了一层洋葱。剥得越深，流泪就越多。</p>
+</blockquote>
+<p>这个原则也在 Perl 语言的设计思想当中有所体现</p>
+<blockquote>
+<p>Easy things should be easy, and hard things should be possible.</p>
+</blockquote>
+<p>往上或许可以追溯到 Alan Kay 的类似观点</p>
+<blockquote>
+<p>Simple things should be simple, complex things should be possible.</p>
+</blockquote>
+<p>简单，提供足够的封装，一个软件才能够为用户带来价值。</p>
+<p>除此以外，对于 C++ 语言在实现上的原则，Bjarne 贯穿全文的强调了两点</p>
+<ul>
+<li>语言结构到硬件设备的直接映射</li>
+<li>零开销抽象<ul>
+<li>你不用的东西，就不需要付出代价。</li>
+<li>你使用的东西，手工写的代码也不会更好。</li>
+</ul>
+</li>
+</ul>
+<p>这也是 C++ 定位在系统编程语言带来的需求，原文的表达是“不要给 C++ 以下的低级语言留有余地（汇编语言除外）”。</p>
+<h2 id="工作组织方式"><a href="#工作组织方式" class="headerlink" title="工作组织方式"></a>工作组织方式</h2><p>原文第三章《C++ 标准委员会》花了一章的篇幅讲述了几十年间推动 C++ 语言演进的组织的架构，以及它是如何发挥作用的。限于短评的篇幅这里不做展开讨论，仅罗列原文总结的 C++ 标准委员会在设计和演进语言时面临的问题，几乎每一个都一针见血。强烈建议阅读原文全文（3.3 节），Bjarne 在各个特性的讨论中间也会以该特性为例子讲述碰到的问题和解决方案。</p>
+<ul>
+<li>延迟</li>
+<li>孤立特性</li>
+<li>后来者居上</li>
+<li>热情总青睐新事物</li>
+<li>过度自信</li>
+<li>实现时机不当</li>
+<li>特性交互</li>
+<li>篇幅和分心</li>
+<li>精确规范</li>
+<li>经院主义</li>
+<li>方向</li>
+<li>专一关注</li>
+<li>原则的不适当应用</li>
+<li>倾向专家的偏见</li>
+<li>聪明的问题</li>
+<li>不愿妥协</li>
+<li>缺乏优先级</li>
+<li>完美主义</li>
+<li>少数人的阻挠</li>
+<li>内聚的团体</li>
+</ul>
 ]]></content>
+      <categories>
+        <category>tison</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>软件工程</tag>
+        <tag>开源共同体</tag>
+      </tags>
   </entry>
 </search>
