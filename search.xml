@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>短评《现代 C++ 白皮书》</title>
-    <url>/comments/2021/12/28/develope-modern-cpp/</url>
+    <url>/comments/2021/12/28/develop-modern-cpp/</url>
     <content><![CDATA[<p>近几天读完了 Bjarne Stroustrup 的 HOPL4 论文 <a href="https://www.stroustrup.com/hopl20main-p5-p-bfc9cd4--final.pdf">Thriving in a Crowded and Changing World: C++ 2006–2020</a> 经由 Boolan 组织翻译的中文版，相关文本内容托管在 GitHub 上，<a href="https://github.com/cpp-club/cxx_hopl4_zh">在线阅读</a>。</p>
 <p>不谈其中具体的技术细节，我从 Bjarne 反思 C++ 作为一门编程语言在几十年来如何发展，遇到的问题以及未来的方向的考虑的过程中得到了不少启发，这里做个转述和简短的评论。</p>
 <span id="more"></span>
