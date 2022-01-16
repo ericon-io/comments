@@ -1,6 +1,7 @@
 ---
 title: 短评《现代 C++ 白皮书》
 date: 2021-12-28
+author: tison
 categories: tison
 tags:
     - C++
