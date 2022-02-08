@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.0.0">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.0.0">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/comments/images/apple-touch-icon-next.png">
@@ -19,8 +18,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"ericonf.github.io","root":"/comments/","images":"/comments/images","scheme":"Mist","darkmode":false,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/comments/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/comments/js/config.js"></script>
-<meta name="description" content="Comments on technical topics by Ericonf members.">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ericonf.github.io","root":"/comments/","images":"/comments/images","scheme":"Mist","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/comments/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/comments/js/config.js"></script>
+
+  <meta name="description" content="Comments on technical topics by Ericonf members.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ericonf 锐评">
 <meta property="og:url" content="https://ericonf.github.io/comments/index.html">
@@ -29,6 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Ericonf Members">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ericonf.github.io/comments/media/ericonf.png">
 
 
 <link rel="canonical" href="https://ericonf.github.io/comments/">
@@ -43,7 +44,7 @@
 
 
 
-<meta name="twitter:image" content="https://ericonf.github.io/comments/media/ericonf.png">
+
 
   <noscript>
     <link rel="stylesheet" href="/comments/css/noscript.css">
@@ -244,7 +245,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 11:52:54" itemprop="dateModified" datetime="2022-01-31T11:52:54+00:00">2022-01-31</time>
+      <time title="修改时间：2022-02-08 04:39:49" itemprop="dateModified" datetime="2022-02-08T04:39:49+00:00">2022-02-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -282,7 +283,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>今天学到了一点关于 Rust Enum 的冷知识，在开始阅读之前，大家可以猜一下下面的 Rust 代码在常见的 64 bit 机器上的输出是什么？</p>
-<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span></span> (<span class="built_in">i64</span>, <span class="built_in">i8</span>);</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B</span></span> (<span class="built_in">i64</span>, <span class="built_in">i8</span>, <span class="built_in">bool</span>);</span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    dbg!(std::mem::size_of::&lt;A&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;<span class="built_in">Option</span>&lt;A&gt;&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;B&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;<span class="built_in">Option</span>&lt;B&gt;&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> (<span class="type">i64</span>, <span class="type">i8</span>);</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> (<span class="type">i64</span>, <span class="type">i8</span>, <span class="type">bool</span>);</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    dbg!(std::mem::size_of::&lt;A&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;<span class="type">Option</span>&lt;A&gt;&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;B&gt;());</span><br><span class="line">    dbg!(std::mem::size_of::&lt;<span class="type">Option</span>&lt;B&gt;&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在这个 <a target="_blank" rel="noopener" href="https://play.rust-lang.org/?version=nightly&mode=release&edition=2021&gist=bab644e35609b5475978821378d3560f">Rust Playground</a> 里可以看到结果。</p>
           <!--noindex-->
@@ -349,7 +350,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 11:52:54" itemprop="dateModified" datetime="2022-01-31T11:52:54+00:00">2022-01-31</time>
+      <time title="修改时间：2022-02-08 04:39:49" itemprop="dateModified" datetime="2022-02-08T04:39:49+00:00">2022-02-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -452,7 +453,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 11:52:54" itemprop="dateModified" datetime="2022-01-31T11:52:54+00:00">2022-01-31</time>
+      <time title="修改时间：2022-02-08 04:39:49" itemprop="dateModified" datetime="2022-02-08T04:39:49+00:00">2022-02-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
