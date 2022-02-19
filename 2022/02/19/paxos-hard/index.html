@@ -20,15 +20,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"ericonf.github.io","root":"/comments/","images":"/comments/images","scheme":"Mist","darkmode":false,"version":"8.10.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/comments/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/comments/js/config.js"></script>
 
-  <meta name="description" content="本文中，我将忽略性能等实际问题，主要聊点 general 的东西，如基本概念、表达力，或者说“怎么把它变为可能”，而不是“怎么把它搞得快的飞起”。另外，我会尽量写的让不了解分布式系统或共识的读者也能看懂。不过，如果你已经对 Raft 或 Paxos 之类的共识算法有了概念，那当然还是更好。 我学习共识的经历这个知乎回答：有没有哪一刻让你感受到了文献作者的恶意？是我第一次听说 Paxos 和共识。当">
+  <meta name="description" content="本文中，我将忽略性能等实际问题，主要聊点 general 的东西，如基本概念、表达力，或者说“怎么把它变为可能”，而不是“怎么把它搞得快的飞起”。另外，我会尽量写的让不了解分布式系统或共识的读者也能看懂。不过，如果你已经对 Raft 或 Paxos 之类的共识算法有了概念，那当然还是更好。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为啥 Paxos 这么难？">
-<meta property="og:url" content="https://ericonf.github.io/comments/2022/02/17/paxos-hard/index.html">
+<meta property="og:url" content="https://ericonf.github.io/comments/2022/02/19/paxos-hard/index.html">
 <meta property="og:site_name" content="Ericonf 锐评">
-<meta property="og:description" content="本文中，我将忽略性能等实际问题，主要聊点 general 的东西，如基本概念、表达力，或者说“怎么把它变为可能”，而不是“怎么把它搞得快的飞起”。另外，我会尽量写的让不了解分布式系统或共识的读者也能看懂。不过，如果你已经对 Raft 或 Paxos 之类的共识算法有了概念，那当然还是更好。 我学习共识的经历这个知乎回答：有没有哪一刻让你感受到了文献作者的恶意？是我第一次听说 Paxos 和共识。当">
+<meta property="og:description" content="本文中，我将忽略性能等实际问题，主要聊点 general 的东西，如基本概念、表达力，或者说“怎么把它变为可能”，而不是“怎么把它搞得快的飞起”。另外，我会尽量写的让不了解分布式系统或共识的读者也能看懂。不过，如果你已经对 Raft 或 Paxos 之类的共识算法有了概念，那当然还是更好。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-02-17T09:28:23.621Z">
-<meta property="article:modified_time" content="2022-02-17T09:28:23.621Z">
+<meta property="article:published_time" content="2022-02-19T03:42:50.994Z">
+<meta property="article:modified_time" content="2022-02-19T03:42:50.994Z">
 <meta property="article:author" content="Ericonf Members">
 <meta property="article:tag" content="分布式共识">
 <meta property="article:tag" content="分布式系统">
@@ -36,11 +36,11 @@
 <meta name="twitter:image" content="https://ericonf.github.io/comments/media/ericonf.png">
 
 
-<link rel="canonical" href="https://ericonf.github.io/comments/2022/02/17/paxos-hard/">
+<link rel="canonical" href="https://ericonf.github.io/comments/2022/02/19/paxos-hard/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://ericonf.github.io/comments/2022/02/17/paxos-hard/","path":"2022/02/17/paxos-hard/","title":"为啥 Paxos 这么难？"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://ericonf.github.io/comments/2022/02/19/paxos-hard/","path":"2022/02/19/paxos-hard/","title":"为啥 Paxos 这么难？"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>为啥 Paxos 这么难？ | Ericonf 锐评</title>
@@ -220,7 +220,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://ericonf.github.io/comments/2022/02/17/paxos-hard/">
+    <link itemprop="mainEntityOfPage" href="https://ericonf.github.io/comments/2022/02/19/paxos-hard/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/comments/media/ericonf.png">
@@ -244,7 +244,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2022-02-17 09:28:23" itemprop="dateCreated datePublished" datetime="2022-02-17T09:28:23+00:00">2022-02-17</time>
+      <time title="创建时间：2022-02-19 03:42:50" itemprop="dateCreated datePublished" datetime="2022-02-19T03:42:50+00:00">2022-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -282,6 +282,8 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>本文中，我将<strong>忽略性能等实际问题</strong>，主要聊点 general 的东西，如基本概念、表达力，或者说“怎么把它变为可能”，而不是“怎么把它搞得快的飞起”。另外，我会尽量写的让不了解分布式系统或共识的读者也能看懂。不过，如果你已经对 Raft 或 Paxos 之类的共识算法有了概念，那当然还是更好。</p>
+<span id="more"></span>
+
 <h2 id="我学习共识的经历"><a href="#我学习共识的经历" class="headerlink" title="我学习共识的经历"></a>我学习共识的经历</h2><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/65038346/answer/227674428">这个知乎回答：有没有哪一刻让你感受到了文献作者的恶意？</a>是我第一次听说 Paxos 和共识。当时看了感觉贼逗，同时也就在脑子里留下了 “Paxos 很难” 的初印象。</p>
 <p>正好一年前，我在写 MIT 6.824 的 Raft lab。读 Raft 的时候我感觉它挺好懂的，把东西拆成了模块，把每个模块解释得都很清楚。里面还有一章 “What’s wrong with Paxos?” ，我读的时候又情不自禁地乐了起来。总之，虽然我在 debug 的时候还是有点小困难的，但学 Raft 的认知过程算是很平滑。</p>
 <p>上学期，我有个作业要实现 Paxos。我碰巧收藏过<a target="_blank" rel="noopener" href="https://blog.openacid.com/algo/paxos/">这个博客</a>，就拿出来看看。它用很简单的方式解释了 Paxos，我也就按照它讲的实现了（basic）Paxos，没再看论文或者别的文章。作业还要求我们用一个特定的方案实现 multiple decisions，所以我也没看 multi-Paxos 之类的东西。</p>
@@ -390,7 +392,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://ericonf.github.io/comments/2022/02/17/paxos-hard/" title="为啥 Paxos 这么难？">https://ericonf.github.io/comments/2022/02/17/paxos-hard/</a>
+      <a href="https://ericonf.github.io/comments/2022/02/19/paxos-hard/" title="为啥 Paxos 这么难？">https://ericonf.github.io/comments/2022/02/19/paxos-hard/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！

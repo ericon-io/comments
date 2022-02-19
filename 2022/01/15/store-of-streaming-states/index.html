@@ -27,23 +27,23 @@
 <meta property="og:site_name" content="Ericonf 锐评">
 <meta property="og:description" content="流处理系统处理的数据往往是没有边界的：数据会一直从数据源输入，用户需要看到 SQL 查询的实时结果。与此同时，流处理系统中的计算节点可能出错、失败，可能根据用户的需求实时扩容、缩容。在这一过程中，系统需要能够高效地将计算的中间状态在节点之间转移，并持久化到外部系统上，从而保证计算的不间断进行。 本文介绍了工业界学术界中流处理系统状态存储的三种方案：存储完整状态 (Flink 等系统)，存储共享状态">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ericonf.github.io/comments/base-system.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/flink-operators.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/flink-state-join.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/flink-state-agg.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/shared-arrangement.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/dd-operators.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/dd-state-join.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/dd-state-agg.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/dd-join-3-way.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/dd-remote-shuffle.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/noria-upquery.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/noria-join-left.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/noria-join-right.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/noria-agg.png">
-<meta property="og:image" content="https://ericonf.github.io/comments/state-compare.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/base-system.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/flink-operators.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/flink-state-join.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/flink-state-agg.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/shared-arrangement.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/dd-operators.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/dd-state-join.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/dd-state-agg.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/dd-join-3-way.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/dd-remote-shuffle.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/noria-upquery.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/noria-join-left.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/noria-join-right.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/noria-agg.png">
+<meta property="og:image" content="https://ericonf.github.io/comments/2022/01/15/store-of-streaming-states/state-compare.png">
 <meta property="article:published_time" content="2022-01-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-02-17T09:28:23.621Z">
+<meta property="article:modified_time" content="2022-02-19T03:42:50.994Z">
 <meta property="article:author" content="Ericonf Members">
 <meta property="article:tag" content="分布式系统">
 <meta property="article:tag" content="流式计算">
@@ -267,7 +267,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-02-17 09:28:23" itemprop="dateModified" datetime="2022-02-17T09:28:23+00:00">2022-02-17</time>
+      <time title="修改时间：2022-02-19 03:42:50" itemprop="dateModified" datetime="2022-02-19T03:42:50+00:00">2022-02-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -325,14 +325,17 @@
 
 <p>代表 Fruit 分类被用户查看最长的时间为 40 秒（对应 Alice 访问 Banana 的时间）；Vegetable 分类被用户查看的最长时间为 60 秒（对应 Eve 访问 Potato 的时间）。</p>
 <p>在常见的数据库产品中，系统通常来说会为这个查询生成如下的执行计划（不考虑 optimizer）：</p>
-<p><img src="/comments/base-system.png" alt="base plan of the query"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/base-system.png" class="" title="base plan of the query">
+
 <p>流处理系统的执行计划和常见数据库系统的计划没有太多区别。下面将具体介绍各种流处理系统会如何表示和存储计算的中间状态。</p>
 <h2 id="Full-State-算子维护自己的完整状态"><a href="#Full-State-算子维护自己的完整状态" class="headerlink" title="Full State - 算子维护自己的完整状态"></a>Full State - 算子维护自己的完整状态</h2><p>诸如 <a target="_blank" rel="noopener" href="https://flink.apache.org/">Flink</a> 的流处理系统持久化每个算子的完整状态；与此同时，流计算图上，算子之间传递数据的更新信息。这种存储状态的方法非常符合直觉。前文所述的 SQL，在 Flink 等系统中大致会创建出这个计算图：</p>
-<p><img src="/comments/flink-operators.png" alt="plan of Flink"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/flink-operators.png" class="" title="plan of Flink">
+
 <p>数据源会发出增加一行或是减少一行的消息。经过流算子的处理，这些消息会转变为用户需要的结果。</p>
 <h3 id="Join-State-的存储"><a href="#Join-State-的存储" class="headerlink" title="Join State 的存储"></a>Join State 的存储</h3><p>数据源的消息进入系统后，碰到的第一个算子就是 Join。回顾 SQL 查询的 Join 条件: <code>info INNER JOIN visit ON product</code>。Join 算子在收到左侧 <code>info</code> 的消息后，会先将 <code>visit</code> 一侧的 <code>product</code> 相同的行查出来，然后发给下游。之后，将 <code>info</code> 一侧的消息记录在自己的状态中。对于右侧消息的处理也如出一辙。</p>
 <p>比如，现在 <code>visit</code> 一侧收到 Eve 对着 Potato 看了 60 秒 <code>+ Potato Eve 60</code> 的消息。假设此时 <code>info</code> 一侧的状态已经有了四条记录。</p>
-<p><img src="/comments/flink-state-join.png" alt="join state of Flink"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/flink-state-join.png" class="" title="join state of Flink">
+
 <p>Join 算子会查询 <code>info</code> 一侧 <code>product = Potato</code> 的记录，得到 Potato 是 Vegetable 的结果，之后将 <code>Potato, Vegetable, 60</code> 发给下游。</p>
 <p>而后，<code>visit</code> 一侧的状态会加入 <code>Potato -&gt; Eve, 60</code> 的记录，这样一来，如果 <code>info</code> 发生变化，Join 算子也能对应 <code>visit</code> 给下游发送 Join 算子的更新。</p>
 <h3 id="Aggregation-State-的存储"><a href="#Aggregation-State-的存储" class="headerlink" title="Aggregation State 的存储"></a>Aggregation State 的存储</h3><p>消息接下来被传递到了 Agg 算子上，Agg 算子需要根据 category 分组，计算每个 category 中 length 的最大值。</p>
@@ -347,14 +350,16 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DELETE Vegetable, 50</span><br><span class="line">INSERT Vegetable, 60</span><br></pre></td></tr></table></figure>
 
 <p>整个过程如下图所示：</p>
-<p><img src="/comments/flink-state-agg.png" alt="aggregation state of Flink"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/flink-state-agg.png" class="" title="aggregation state of Flink">
+
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>存储完整状态的流系统通常来说有这么几个特点：</p>
 <ul>
 <li>流计算图上单向传递数据变更的消息 (添加&#x2F;删除)。</li>
 <li>流算子维护、访问自己的状态；与此同时，在多路 Join 的时候，存储的状态可能重复。后文在介绍共享状态时也会详细介绍这一点。</li>
 </ul>
 <h2 id="Shared-State-算子之间共享状态"><a href="#Shared-State-算子之间共享状态" class="headerlink" title="Shared State - 算子之间共享状态"></a>Shared State - 算子之间共享状态</h2><p>我们以 <a target="_blank" rel="noopener" href="https://github.com/TimelyDataflow/differential-dataflow">Differential Dataflow</a> (<a target="_blank" rel="noopener" href="https://github.com/MaterializeInc/materialize">Materialize</a> 下面的计算引擎) 的 Shared Arrangement 为例介绍这种共享状态的实现。下文将使用 DD 简称 Differential Dataflow。</p>
-<h3 id="DD-的-Arrange-算子与-Arrangement"><a href="#DD-的-Arrange-算子与-Arrangement" class="headerlink" title="DD 的 Arrange 算子与 Arrangement"></a>DD 的 Arrange 算子与 Arrangement</h3><p><img src="/comments/shared-arrangement.png" alt="intro of shared arrangement"></p>
+<h3 id="DD-的-Arrange-算子与-Arrangement"><a href="#DD-的-Arrange-算子与-Arrangement" class="headerlink" title="DD 的 Arrange 算子与 Arrangement"></a>DD 的 Arrange 算子与 Arrangement</h3><img src="/comments/2022/01/15/store-of-streaming-states/shared-arrangement.png" class="" title="intro of shared arrangement">
+
 <p>DD 使用 Arrangement 来维护状态。简单来说，Arrangement 是一个支持 MVCC 的 key-value map 数据结构，存储 key 到 (value, time, diff) 的映射。在 Arrangement 上可以：</p>
 <ul>
 <li>通过 handler 任意查询某个时间点 key-value 的映射关系。</li>
@@ -374,20 +379,25 @@
 </ul>
 <p>之后我们会详细介绍 DD 中的 JoinCore 和 ReduceCore 算子。</p>
 <h3 id="从-Differential-Dataflow-到-Materialize"><a href="#从-Differential-Dataflow-到-Materialize" class="headerlink" title="从 Differential Dataflow 到 Materialize"></a>从 Differential Dataflow 到 Materialize</h3><p>Materialize 会将用户输入的 SQL 查询转换为 DD 的计算图。值得一提的是，<code>join</code>, <code>group by</code> 等 SQL 操作在 DD 中往往不会只对应一个算子。我们顺着消息的流动，看看 Materialize 是如何存储状态的。</p>
-<p><img src="/comments/dd-operators.png" alt="plan of differential dataflow"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/dd-operators.png" class="" title="plan of differential dataflow">
+
 <h3 id="Join-State-的存储-1"><a href="#Join-State-的存储-1" class="headerlink" title="Join State 的存储"></a>Join State 的存储</h3><p>SQL 的 A Join B 操作在 DD 中对应三个算子：两个 <code>Arrange</code> 和一个 <code>JoinCore</code>。Arrange 算子根据 join key 分别持久化状态两个 source 的状态，以 KV 的形式存储在 Arrangement 中。Arrange 算子对输入攒批后，将 TraceHandle 发给下游的 <code>JoinCore</code> 算子。实际的 Join 逻辑在 <code>JoinCore</code> 算子中发生，<code>JoinCore</code> 不存储任何状态。</p>
-<p><img src="/comments/dd-state-join.png" alt="join state of differential dataflow"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/dd-state-join.png" class="" title="join state of differential dataflow">
+
 <p>如上图所示，现在 Visit 侧来了一条更新：Eve 对着 Potato 看了 60 秒。<code>JoinCore</code> 算子通过 Trace B 访问到这条更新，并向另一侧的 Trace A 查询 <code>product = Potato</code> 的行，匹配到 <code>Potato</code> 是一种蔬菜，往下游输出 <code>Potato, Vegetable, 60</code> 的更改。</p>
 <h3 id="Reduce-状态的存储"><a href="#Reduce-状态的存储" class="headerlink" title="Reduce 状态的存储"></a>Reduce 状态的存储</h3><p>DD 中 SQL Agg 算子对应 Reduce 操作。Reduce 中又包含两个算子：<code>Arrange</code> 和 <code>ReduceCore</code>。<code>Arrange</code> 算子根据 group key 存储输入数据，<code>ReduceCore</code> 算子自己维护一个存储聚合结果的 Arrangement，而后通过 <code>as_collection</code> 操作将聚合结果输出成一个 collection。</p>
-<p><img src="/comments/dd-state-agg.png" alt="aggregation state of differential dataflow"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/dd-state-agg.png" class="" title="aggregation state of differential dataflow">
+
 <p>Join 的更新来到 Reduce 算子后，先被 Arrange 算子根据 group key 存储在 Arrangement 中。ReduceCore 收到 Trace C 后，将 <code>key = Vegetable</code> 的行全部扫描出来，并求最大值，最后将最大值更新到自己的 Arrangement 中。Trace D 经过 <code>as_collection</code> 操作后，即可输出为数据更新的形式，变成其他算子可以处理的信息。</p>
 <h3 id="更方便的算子状态复用"><a href="#更方便的算子状态复用" class="headerlink" title="更方便的算子状态复用"></a>更方便的算子状态复用</h3><p>由于 DD 中存储状态的算子和实际计算的算子是分开的，我们可以利用这个性质做算子状态的复用。</p>
-<p><img src="/comments/dd-join-3-way.png" alt="3-way join of differential dataflow"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/dd-join-3-way.png" class="" title="3-way join of differential dataflow">
+
 <p>比如用户想要同时查询 <code>A JOIN B</code> 和 <code>B JOIN C</code>，在 DD 中，一种可能的计算图就是生成三个 Arrange 算子和两个 JoinCore 算子。相比于存储完整状态的流处理系统，我们可以避免 B 的状态被存两遍</p>
 <p>另一个例子是多路 Join，比如 <code>SELECT * FROM A, B, C WHERE A.x = B.x and A.x = C.x</code>。在这个例子中，如果使用 JoinCore 算子来生成计算图，状态还是有可能重复，一共需要生成 4 个 Arrangement。</p>
 <p>Materialize 的 SQL Join 除了被转换为上文所述 DD 的 JoinCore 算子之外，也有可能转换为 Delta Join。如图所示，我们只需要分别生成 A, B, C 的 3 个 Arrangement，然后使用 lookup 算子查询 A 的修改在 B C 中对应的行（其他两个表的修改亦然），最后做一个 union，即可得到 Join 的结果。Delta Join 可以充分利用已有的 Arrangement 进行计算，大大减小 Join 所需的状态存储数。</p>
 <h3 id="远程访问状态的开销"><a href="#远程访问状态的开销" class="headerlink" title="远程访问状态的开销"></a>远程访问状态的开销</h3><p>在流系统中，计算中间产生的数据往往无法全部放在一个结点上；与此同时，同一个执行计划中的节点，也会有很多并行度。比如下面这个两表 Join 的例子。两个表 A、B 的 Arrangement 可能分别在两个结点上产生 (Node 1, 2)，然后同时用两个结点分别对其中一部分数据做 Join。</p>
-<p><img src="/comments/dd-remote-shuffle.png" alt="remote shuffle of differential dataflow"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/dd-remote-shuffle.png" class="" title="remote shuffle of differential dataflow">
+
 <p>在这个情况下，DD 中势必会发生远程访问 Arrangement 的问题。由于算子完全没有内部状态，JoinCore 每处理一行都需要一次远程访问，查找 join key 对应的数据。总的来说，Arrange 和计算放在两个结点上会大大增加计算的延迟，放在一个结点上又无法充分利用分布式系统的资源，这是一个比较矛盾的地方。</p>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在共享状态的流处理系统中，算子的计算逻辑和存储逻辑被拆分到多个算子中。因此，不同的计算任务可以共享同一个存储，从而减少存储状态的数量。如果要实现共享状态的流处理系统，一般会有这样的特点：</p>
 <ul>
@@ -400,15 +410,19 @@
 
 <p>执行这条 SQL 的时候，才会触发流系统的计算。计算过程中，也只计算 <code>category = &quot;Vegetable&quot;</code> 相关的数据，保存相关的状态。下面将以这条查询为例，说明 Noria 的计算方式与状态存储。</p>
 <h3 id="Upquery"><a href="#Upquery" class="headerlink" title="Upquery"></a>Upquery</h3><p>Noria 的各个算子仅存储部分数据。用户的查询可能直接击中这个部分状态的缓存，也有可能需要回溯到上游查询。假设现在所有算子的状态都为空，Noria 需要通过 upquery 来递归查询上游算子的状态，从而得到正确的结果。</p>
-<p><img src="/comments/noria-upquery.png" alt="upquery of Noria"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/noria-upquery.png" class="" title="upquery of Noria">
+
 <p>用户向流计算引擎查询 <code>category = &quot;Vegetable&quot;</code> 的最大值。Agg 算子为了计算出它的结果，需要知道所有 category 为蔬菜的记录。于是，Agg 算子将这个 upquery 转发到上游 Join 算子。</p>
 <p>Join 算子要得到蔬菜对应的所有信息，需要向两个上游表分别查询情况。category 属于 Info 表的列，因此，Join 算子将这条 upquery 转发给 Info 表。</p>
-<h3 id="Join-算子的实现"><a href="#Join-算子的实现" class="headerlink" title="Join 算子的实现"></a>Join 算子的实现</h3><p><img src="/comments/noria-join-left.png" alt="join implementation of Noria - the left side"></p>
+<h3 id="Join-算子的实现"><a href="#Join-算子的实现" class="headerlink" title="Join 算子的实现"></a>Join 算子的实现</h3><img src="/comments/2022/01/15/store-of-streaming-states/noria-join-left.png" class="" title="join implementation of Noria - the left side">
+
 <p>Info table 返回蔬菜分类下的所有产品后，Join 算子会再发一个 upquery 给另一边 Visit table，查询萝卜、土豆对应的浏览记录。</p>
-<p><img src="/comments/noria-join-right.png" alt="join implementation of Noria - the right side"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/noria-join-right.png" class="" title="join implementation of Noria - the right side">
+
 <p>Visit table 返回对应记录后，Join 算子就可以根据两次 Upquery 的输出计算出 Join 结果了。</p>
 <p>在 Noria 中，Join 算子无需保存任何实际状态，仅需要记录正在进行的 upquery 即可。</p>
-<h3 id="Agg-算子的实现"><a href="#Agg-算子的实现" class="headerlink" title="Agg 算子的实现"></a>Agg 算子的实现</h3><p><img src="/comments/noria-agg.png" alt="aggregation implementation of Noria"></p>
+<h3 id="Agg-算子的实现"><a href="#Agg-算子的实现" class="headerlink" title="Agg 算子的实现"></a>Agg 算子的实现</h3><img src="/comments/2022/01/15/store-of-streaming-states/noria-agg.png" class="" title="aggregation implementation of Noria">
+
 <p>数据来到 Agg 算子后，Noria 将直接计算出最大值，并将最大值存储在算子的状态中。在前文所述的系统里，Agg 算子的状态需要保存完整的数据（水果的所有浏览记录、蔬菜的所有浏览记录）。Noria 只需要缓存用户请求的状态，因此在这个请求中只要记录蔬菜的记录。与此同时，如果上游发生了删除操作，Noria 可以直接将蔬菜对应的行删除，以便之后重新计算最大值。因此，在存储部分状态的系统中，也无需通过记录所有值的方法回推第二大的值——直接清空缓存就行了。</p>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>存储部分状态的流处理系统通过 upquery 的方式实时响应用户的请求，在本文所述的实现中，所需要存储的状态数最少。它一般有以下特点：</p>
 <ul>
@@ -418,7 +432,8 @@
 <li>DDL &#x2F; Recovery 非常快。由于算子里面的信息都是按需计算的，如果用户对 View 进行增删列的操作，或是做迁移，都可以直接清空缓存分配新节点，无需代价较高的状态恢复。</li>
 </ul>
 <p>最后对比一下所有的状态存储方式所对应的流处理系统特征：</p>
-<p><img src="/comments/state-compare.png" alt="comparison of streaming state stores"></p>
+<img src="/comments/2022/01/15/store-of-streaming-states/state-compare.png" class="" title="comparison of streaming state stores">
+
 <ul>
 <li>存储完整状态 (以 Flink 为例)：流上传递数据。</li>
 <li>共享状态存储 (以 Materialize &#x2F; DD 为例)：流上传递数据和 snapshot。</li>
