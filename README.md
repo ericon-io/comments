@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository hosts comments on technical topics by Ericonf members.
+This repository hosts comments on technical topics by Ericon members.
 
 ## License
 
@@ -10,6 +10,6 @@ This repository hosts comments on technical topics by Ericonf members.
 
 ## Contributing
 
-Please join discussions at the [GitHub Discussion forum](https://github.com/Ericonf/comments/discussions).
+Please join discussions at the [GitHub Discussion forum](https://github.com/ericon-io/comments/discussions).
 
 File an issue if you find something on building, setups, or grammar. If you have a topic to discuss, a question to ask or any other topics, go to the discussion forum.

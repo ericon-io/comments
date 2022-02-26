@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Ericonf 锐评
-subtitle: 'Comments on technical topics by Ericonf members.'
-description: 'Comments on technical topics by Ericonf members.'
+title: Ericon 锐评
+subtitle: 'Comments on technical topics by Ericon members.'
+description: 'Comments on technical topics by Ericon members.'
 keywords:
-author: Ericonf Members
+author: Ericon Members
 language: zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://ericonf.github.io/comments
+url: https://ericon-io.github.io/comments
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -117,7 +117,7 @@ search:
 ## Docs: https://github.com/next-theme/hexo-next-giscus
 giscus:
   enable: true
-  repo: Ericonf/comments
+  repo: ericon-io/comments
   repo_id: R_kgDOGkZa2g
   category: General
   category_id: DIC_kwDOGkZa2s4CAYsV

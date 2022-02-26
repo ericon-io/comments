@@ -77,7 +77,7 @@ creative_commons:
 open_graph:
   enable: true
   options:
-    twitter_image: https://ericonf.github.io/comments/media/ericonf.png
+    twitter_image: https://ericon-io.github.io/comments/media/ericon.png
 
 # ---------------------------------------------------------------
 # Menu Settings
@@ -133,7 +133,7 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-  url: /media/ericonf.png
+  url: /media/ericon.png
   # If true, the avatar will be displayed in circle.
   rounded: true
   # If true, the avatar will be rotated with the cursor.
@@ -147,7 +147,7 @@ site_state: true
 # Key is the link label showing to end users.
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
-  GitHub: https://github.com/Ericonf || fab fa-github
+  GitHub: https://github.com/ericon-io || fab fa-github
   #E-Mail: mailto:yourname@gmail.com || fa fa-envelope
   #Weibo: https://weibo.com/yourname || fab fa-weibo
   #Google: https://plus.google.com/yourname || fab fa-google
