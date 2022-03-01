@@ -3,7 +3,7 @@ title: "如何在开源项目中做重构？"
 author: xuanwo
 categories: xuanwo
 tags:
-    - open source
+    - 开源
 ---
 
 最近完成了 [Databend](https://github.com/datafuselabs/databend/) 存储模块的大重构，在不阻塞现有功能开发的前提下，基本无痛的完成了功能的实现。本文总结了我个人的一些经验，期望能够带来一些启发。
