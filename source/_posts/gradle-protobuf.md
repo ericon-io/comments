@@ -9,7 +9,7 @@ tags:
     - Protobuf
 ---
 
-近日尝试利用 [Apache Ratis](https://github.com/apache/ratis) 这个项目包装一个 Raft 协议驱动的状态机的时候，遇到了需要用 Protobuf 传输数据的场景。由于 Gradle 构建工具的门槛和 Java 语言项目的某些惯例碰到了使用上的问题，这里记录一下我在这个玩具项目当中的用例。
+近日尝试利用 [Apache Ratis](https://github.com/apache/ratis) 这个项目包装一个 Raft 协议驱动的状态机，遇到了需要用 Protobuf 传输数据的场景。由于 Gradle 构建工具的门槛和 Java 语言项目的某些惯例碰到了使用上的问题，这里记录一下我在这个玩具项目当中的用例。
 
 <!-- more -->
 
