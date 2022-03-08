@@ -1,5 +1,6 @@
 ---
 title: "为啥 Paxos 这么难？"
+date: 2022-02-17
 author: xxchan
 categories: xxchan
 tags:

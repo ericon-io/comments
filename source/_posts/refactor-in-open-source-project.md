@@ -1,5 +1,6 @@
 ---
-title: "如何在开源项目中做重构？"
+title: 如何在开源项目中做重构？
+date: 2022-03-02
 author: xuanwo
 categories: xuanwo
 tags:
